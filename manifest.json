@@ -1,0 +1,12 @@
+{
+    "display_name": "Досье: Двач и Телеграм",
+    "loading_order": 20,
+    "requires": [],
+    "optional": [],
+    "js": "index.js",
+    "css": "style.css",
+    "author": "Медея",
+    "version": "1.0.0",
+    "homePage": "",
+    "auto_update": true
+}
