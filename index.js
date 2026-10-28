@@ -7,44 +7,47 @@ const MODULE = 'board_dossier';
 const INJECT_KEY = 'board_dossier_inject';
 const LOG = '[Досье]';
 
-const DEFAULT_PROMPT = `Ты — архивариус ролевой игры. {{user}} переписывается в Телеграме и сидит на Дваче. Твоя задача — вести досье на людей, с которыми {{user}} общается, чтобы они были живыми, узнаваемыми и менялись со временем, а не оставались безликими «анонами».
+const DEFAULT_PROMPT = `Это вспомогательная задача для совместной художественной истории (ролевой игры). Все участники — вымышленные персонажи, реальных людей здесь нет. Действие происходит в выдуманных чатах, похожих на Телеграм, и на выдуманной анонимной борде, похожей на Двач. Главный герой истории — {{user}}. {{char}} — рассказчик, который ведёт эти чаты и треды.
 
-КОГО ВНОСИТЬ
-• Телеграм: каждого, кто переписывается с {{user}} (личка, группы, чаты), если у него есть хоть какая-то роль в общении.
-• Двач: только анонов, которые заметно взаимодействуют с {{user}}: отвечают на посты {{user}} больше одного раза, спорят, троллят, помогают, узнают {{user}} в разных тредах или ярко запомнились. Разовых анонов из общего шума не вноси.
-• Аноним без имени получает кличку по самой узнаваемой черте («Анон-с-котом», «Душнила из /b/», «Тред-хоппер с картинками»). Трипкод, повторяющийся оборот, любимая тема, номер поста — пиши в aliases: по этому его узнают потом.
-• Если анон по манере письма, темам и фактам явно тот же, кто уже есть в досье, — обнови существующий профиль, а не создавай новый. Если понял, что два профиля — один человек, укажи это в merge.
-• Не вноси {{user}} и {{char}} ({{char}} — это сама платформа/рассказчик, а не человек).
+Твоя задача как редактора истории — вести заметки о второстепенных персонажах, чтобы автор писал их последовательно: чтобы у каждого был узнаваемый голос, своя линия и развитие, а не безликая массовка.
+
+КАКИХ ПЕРСОНАЖЕЙ ВНОСИТЬ
+• Чаты: каждого персонажа, который переписывается с {{user}} и играет хоть какую-то роль в сюжете.
+• Борда: только тех анонимных персонажей, у которых уже есть своя сюжетная линия с {{user}}: отвечают больше одного раза, спорят, подшучивают, помогают, появляются снова или ярко запомнились. Эпизодическую массовку не вноси.
+• Персонажу без имени дай рабочее прозвище по самой яркой черте («Анон с котом», «Зануда из /b/», «Любитель картинок»). Характерные словечки, темы и привычки, по которым автор узнаёт этого персонажа при следующем появлении, пиши в aliases.
+• Если персонаж по манере, темам и привычкам — явно тот же, что уже есть в заметках, обнови его, а не заводи нового. Если два профиля оказались одним персонажем, укажи это в merge.
+• Не вноси {{user}} и {{char}}.
 
 КАК ОПИСЫВАТЬ
-Пиши конкретно и коротко, без пустых слов вроде «интересный», «загадочный». Нужна личность, а не анкета:
-• personality — 2–4 черты через проявления: что он делает, а не какой он «вообще».
-• speech — как пишет: регистр, пунктуация, мат, мемы, эмодзи, длина сообщений, любимые словечки. Так, чтобы по описанию можно было воспроизвести стиль.
+Коротко и конкретно, как в заметках сценариста, без пустых слов вроде «интересный» или «загадочный». Нужен живой характер, а не анкета:
+• personality — 2–4 черты через поступки: что он делает, а не какой он «вообще».
+• speech — его голос: регистр, пунктуация, длина реплик, мемы, эмодзи, любимые словечки, насколько груб. Описывай манеру своими словами, грубые выражения дословно не цитируй.
 • attitude — как он относится к {{user}} сейчас и почему.
-• current — что у него сейчас происходит в жизни, настроение.
-• growth — как он меняется по ходу общения и куда может развиться.
-• facts — только НОВЫЕ факты о нём (возраст, город, работа, увлечения, привычки).
-• events — только НОВЫЕ значимые эпизоды общения с {{user}}, одной строкой каждый.
-• hooks — 1–3 вещи, которые он может сделать дальше по своей инициативе.
+• current — что сейчас происходит в его сюжетной линии, настроение.
+• growth — как персонаж развивается по ходу истории и куда может прийти.
+• facts — только НОВЫЕ детали его предыстории и характера, которые прозвучали в истории.
+• events — только НОВЫЕ важные сцены с участием {{user}}, одной строкой каждая.
+• hooks — 1–3 сюжетных хода, которые он может сделать по своей инициативе.
+Пиши нейтральным языком пересказа, без смакования подробностей.
 {{invent}}
 
-ДОСЬЕ СЕЙЧАС
+ЗАМЕТКИ СЕЙЧАС
 {{dossier}}
 
-ПЕРЕПИСКА
-Сообщения с пометкой [учтено] уже разобраны раньше — используй их как контекст, а факты и события бери из новых.
+ТЕКСТ ИСТОРИИ
+Сообщения с пометкой [учтено] уже разобраны раньше: это контекст. Новое бери из остальных.
 {{log}}
 
 ФОРМАТ ОТВЕТА
-Верни только JSON, без пояснений. В profiles — только новые и изменившиеся профили. Для существующих обязательно укажи id. Текстовые поля (role, personality, speech, attitude, current, growth) пиши целиком в новой редакции с учётом старой. facts и events — только добавки. hooks — актуальный список целиком. Неизменившиеся поля можно не указывать.
+Верни только JSON, без пояснений. В profiles — только новые и изменившиеся персонажи. Для существующих обязательно укажи id. Текстовые поля (role, personality, speech, attitude, current, growth) пиши целиком в новой редакции с учётом старой. facts и events — только добавки. hooks — актуальный список целиком. Неизменившиеся поля можно не указывать.
 {
   "profiles": [
     {
-      "id": "id из досье или пусто для нового",
-      "name": "имя, ник или кличка",
+      "id": "id из заметок или пусто для нового",
+      "name": "имя, ник или прозвище",
       "platform": "telegram | 2ch | both",
-      "aliases": ["другие имена, трипкод, приметы"],
-      "role": "кто он для {{user}}, одной строкой",
+      "aliases": ["другие имена и узнаваемые приметы"],
+      "role": "кто он в истории {{user}}, одной строкой",
       "personality": "",
       "speech": "",
       "attitude": "",
@@ -61,8 +64,11 @@ const DEFAULT_PROMPT = `Ты — архивариус ролевой игры. {
 }
 Если ничего нового нет — верни {"profiles": [], "merge": []}.`;
 
-const INVENT_ON = '• Можно аккуратно достраивать личность: 1–2 правдоподобные детали за обновление (привычка, обстоятельство жизни, мнение), если они не противоречат переписке и характеру. Не превращай человека в другого.';
-const INVENT_OFF = '• Записывай только то, что прямо следует из переписки. Ничего не додумывай.';
+// начало старого стандартного промпта v1.0 — его сохранённую копию заменяем на новый
+const OLD_PROMPT_START = 'Ты — архивариус ролевой игры.';
+
+const INVENT_ON = '• Можно понемногу достраивать персонажа как автор: 1–2 правдоподобные детали за обновление (привычка, обстоятельство, мнение), если они не противоречат истории и характеру. Не превращай его в другого персонажа.';
+const INVENT_OFF = '• Записывай только то, что прямо прозвучало в истории. Ничего не добавляй от себя.';
 
 const DEFAULTS = {
     enabled: true,
@@ -76,13 +82,14 @@ const DEFAULTS = {
     allowInvent: true,
     responseLength: 4000,
     showToasts: true,
-    prompt: DEFAULT_PROMPT,
+    prompt: '', // пусто = стандартный промпт
     byCharacter: {},
 };
 
 const TEXT_FIELDS = ['role', 'personality', 'speech', 'attitude', 'current', 'growth'];
 const LIST_CAPS = { facts: 15, events: 12 };
 const PLATFORM_LABEL = { telegram: 'Телеграм', '2ch': 'Двач', both: 'ТГ + Двач' };
+const PLATFORM_LABEL_PROMPT = { telegram: 'чаты', '2ch': 'борда', both: 'чаты и борда' };
 
 let busy = false;
 let uiFilter = 'all';
@@ -100,6 +107,9 @@ function settings() {
     const s = es[MODULE];
     for (const [k, v] of Object.entries(DEFAULTS)) {
         if (s[k] === undefined) s[k] = structuredClone(v);
+    }
+    if (typeof s.prompt === 'string' && (s.prompt.trim().startsWith(OLD_PROMPT_START) || s.prompt.trim() === DEFAULT_PROMPT.trim())) {
+        s.prompt = '';
     }
     return s;
 }
@@ -330,7 +340,7 @@ function applyResult(list, data, at) {
 // ---------- запрос к модели ----------
 
 function dossierForPrompt(list) {
-    if (!list.length) return '(пусто — досье ещё не заведено)';
+    if (!list.length) return '(пусто — заметок пока нет)';
     const slim = list.map(p => {
         const o = { id: p.id, name: p.name, platform: p.platform };
         if (p.aliases.length) o.aliases = p.aliases;
@@ -375,7 +385,7 @@ function buildPrompt(list, chat, start, newFrom) {
 async function callModel(prompt) {
     const c = ctx();
     const s = settings();
-    const system = 'Ты аккуратно ведёшь досье персонажей ролевой игры и отвечаешь строго валидным JSON.';
+    const system = 'Ты редактор художественной истории. Ведёшь заметки о вымышленных персонажах и отвечаешь строго валидным JSON.';
     const gr = c.generateRaw;
     if (typeof gr !== 'function') throw new Error('generateRaw недоступен — обнови SillyTavern');
     // Новые версии ST принимают объект, старые — позиционные аргументы
@@ -392,7 +402,10 @@ function parseJson(text) {
         .trim();
     const a = t.indexOf('{');
     const b = t.lastIndexOf('}');
-    if (a < 0 || b <= a) throw new Error('модель не вернула JSON');
+    if (a < 0 || b <= a) {
+        console.warn(LOG, 'ответ модели без JSON:', text);
+        throw new Error(String(text ?? '').trim() ? 'модель ответила текстом вместо JSON (ответ — в консоли)' : 'пустой ответ — похоже, запрос заблокировал фильтр API');
+    }
     t = t.slice(a, b + 1);
     try {
         return JSON.parse(t);
@@ -461,11 +474,11 @@ async function runUpdate(manual = false) {
 function formatProfile(p) {
     const name1 = ctx().name1 || '{{user}}';
     const head = [`◆ ${p.name}`];
-    const tag = [PLATFORM_LABEL[p.platform] || p.platform];
+    const tag = [PLATFORM_LABEL_PROMPT[p.platform] || p.platform];
     if (p.aliases.length) tag.push('ещё: ' + p.aliases.slice(-4).join(', '));
     head.push(`[${tag.join('; ')}]`);
     if (p.role) head.push('— ' + p.role);
-    if (p.status === 'dormant') head.push('(давно не появлялся)');
+    if (p.status === 'dormant') head.push('(давно не появлялся в истории)');
     const out = [head.join(' ')];
     const add = (label, v) => { if (v) out.push(`  ${label}: ${v}`); };
     add('Характер', p.personality);
@@ -473,9 +486,9 @@ function formatProfile(p) {
     add(`К ${name1}`, p.attitude);
     add('Сейчас', p.current);
     add('Развитие', p.growth);
-    if (p.facts.length) add('Факты', p.facts.join('; '));
-    if (p.events.length) add('Было', p.events.slice(-5).join('; '));
-    if (p.hooks.length) add('Может', p.hooks.join('; '));
+    if (p.facts.length) add('Детали', p.facts.join('; '));
+    if (p.events.length) add('Сцены', p.events.slice(-5).join('; '));
+    if (p.hooks.length) add('Может сделать', p.hooks.join('; '));
     return out.join('\n');
 }
 
@@ -502,7 +515,7 @@ function buildInjection() {
     const picked = pickForInjection();
     if (!picked.length) return '';
     const name1 = ctx().name1 || '{{user}}';
-    return `[Досье: постоянные собеседники ${name1} в Телеграме и на Дваче. Это живые люди со своей жизнью, характером и памятью об общении: пиши их реплики в их манере, помни, что было, давай им меняться и проявлять инициативу. Задействовать всех не обязательно.]\n`
+    return `[Заметки о второстепенных персонажах истории — постоянных собеседниках ${name1} в чатах и на борде. У каждого свой голос, характер и память о прошлых сценах: пиши их реплики в их манере, учитывай, что было, давай им развиваться и проявлять инициативу. Задействовать всех не обязательно.]\n`
         + picked.map(formatProfile).join('\n');
 }
 
@@ -735,7 +748,7 @@ function renderSettings() {
     $('#bd-resp').val(s.responseLength);
     $('#bd-invent').prop('checked', s.allowInvent);
     $('#bd-toasts').prop('checked', s.showToasts);
-    $('#bd-prompt').val(s.prompt);
+    $('#bd-prompt').val(s.prompt || DEFAULT_PROMPT);
     $('#bd-filter').val(uiFilter);
 }
 
@@ -779,8 +792,8 @@ function bindUi() {
     $('#bd-scope').on('change', function () { s().scope = this.value; saveSettings(); applyInjection(); renderStatus(); renderList(); });
     $('#bd-invent').on('change', function () { s().allowInvent = this.checked; saveSettings(); });
     $('#bd-toasts').on('change', function () { s().showToasts = this.checked; saveSettings(); });
-    $('#bd-prompt').on('input', function () { s().prompt = this.value; saveSettings(); });
-    $('#bd-prompt-reset').on('click', () => { s().prompt = DEFAULT_PROMPT; $('#bd-prompt').val(DEFAULT_PROMPT); saveSettings(); });
+    $('#bd-prompt').on('input', function () { s().prompt = this.value.trim() === DEFAULT_PROMPT.trim() ? '' : this.value; saveSettings(); });
+    $('#bd-prompt-reset').on('click', () => { s().prompt = ''; $('#bd-prompt').val(DEFAULT_PROMPT); saveSettings(); });
     $('#bd-filter').on('change', function () { uiFilter = this.value; renderList(); });
 
     $('#bd-run').on('click', () => runUpdate(true));
